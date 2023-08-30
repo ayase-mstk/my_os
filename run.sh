@@ -13,5 +13,5 @@ $CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
     kernel.c
 
 # QEMUを起動
-$QEMU -machine virt -bios default -nographic -serial mon:stdio --no-reboot \
+$QEMU -machine virt -bios opensbi-riscv32-generic-fw_dynamic.bin -nographic -serial mon:stdio --no-reboot \
     -kernel kernel.elf
