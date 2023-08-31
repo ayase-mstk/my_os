@@ -85,7 +85,7 @@ struct process {
 #define PROC_EXITED   2
 
 // virtio
-#define SECTOR_SIZE       1024
+#define SECTOR_SIZE       512
 #define VIRTQ_ENTRY_NUM   16
 #define VIRTIO_DEVICE_BLK 2
 #define VIRTIO_BLK_PADDR  0x10001000
@@ -151,8 +151,40 @@ struct virtio_blk_req {
     uint64_t sector;
 
     // 2つ目のディスクリプタ: 読み込み処理の場合は、デバイスから書き込み可 (VIRTQ_DESC_F_WRITE)
-    uint8_t data[SECTOR_SIZE];
+    uint8_t data[512];
 
     // 3つ目のディスクリプタ: デバイスから書き込み可 (VIRTQ_DESC_F_WRITE)
     uint8_t status;
 } __attribute__((packed));
+
+// file system
+#define FILES_MAX      2
+#define DISK_MAX_SIZE  align_up(sizeof(struct file) * FILES_MAX, SECTOR_SIZE)
+
+struct tar_header {
+    char name[100];
+    char mode[8];
+    char uid[8];
+    char gid[8];
+    char size[12];
+    char mtime[12];
+    char checksum[8];
+    char type;
+    char linkname[100];
+    char magic[6];
+    char version[2];
+    char uname[32];
+    char gname[32];
+    char devmajor[8];
+    char devminor[8];
+    char prefix[155];
+    char padding[12];
+    char data[];      // ヘッダに続くデータ領域を指す配列 (フレキシブル配列メンバ)
+} __attribute__((packed));
+
+struct file {
+    bool in_use;      // このファイルエントリが使われているか
+    char name[100];   // ファイル名
+    char data[1024];  // ファイルの内容
+    size_t size;      // ファイルサイズ
+};
