@@ -63,6 +63,7 @@ struct sbiret {
 #define PROCS_MAX 8       // 最大プロセス数
 #define PROC_UNUSED   0   // 未使用のプロセス管理構造体
 #define PROC_RUNNABLE 1   // 実行可能なプロセス
+#define PROC_EXITED   2
 
 struct process {
     int pid;              // プロセスID
@@ -81,8 +82,8 @@ struct process {
 
 #define USER_BASE 0x1000000
 #define SSTATUS_SPIE (1 << 5)
+#define SSTATUS_SUM  (1 << 18)
 #define SCAUSE_ECALL 8
-#define PROC_EXITED   2
 
 // virtio
 #define SECTOR_SIZE       512

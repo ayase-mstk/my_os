@@ -19,7 +19,9 @@ $OBJCOPY -Ibinary -Oelf32-littleriscv shell.bin shell.bin.o
 $CC $CFLAGS -Wl,-Tkernel.ld -Wl,-Map=kernel.map -o kernel.elf \
     kernel.c common.c shell.bin.o
 
-tar cf disk.tar --format=ustar --strip-components=1 disk
+tar cf disk.tar --format=ustar --strip-components=1 disk/hello.txt disk/meow.txt
+
+tar -tf disk.tar
 
 # QEMUを起動
 $QEMU -machine virt -bios default -nographic -serial mon:stdio --no-reboot \
